@@ -1,0 +1,139 @@
+{% extends 'app/base/base.html' %}
+{% load static %}
+
+
+{% block extraCSS %}
+    <link rel="stylesheet" href="{% static 'app/home/css/home.css' %}">
+    <style>
+        img {
+            height: 20px;
+            width: 20px;
+        }
+
+    </style>
+{% endblock %}
+
+{% block extraJS %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'app/home/js/home.js' %}"></script>
+    <script type="text/javascript" src="{% static 'app/home/js/like.js' %}"></script>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid">
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">{{ user.name }}</a>
+                </div>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        {% if islogin %}
+                            <a href="{% url 'app:userinfo' %}"><img src="/static/media/{{ icon }}"></a>
+                        {% else %}
+                            <a href="{% url 'app:register' %}">注册</a>
+                        {% endif %}
+                    </li>
+                    <li>
+                        {% if islogin %}
+                            <a href="{% url 'app:userinfo' %}">{{ username }}</a>
+                        {% else %}
+                            <a href="{% url 'app:login' %}">登陆</a>
+                        {% endif %}
+
+                    </li>
+                    <!--<li>
+                        <a class="icon" href="#">
+                            <img width="40" height="40" class="img-circle" alt="" src="https://cs.vmovier.com/Uploads/Banner/2017/12/23/5a3d52d82724d.png" />
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href=""><span>Username</span></a>
+                    </li>-->
+                </ul>
+            </div>
+
+        </nav>
+        {#    主页的轮播图#}
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                {% for banner in banners %}
+                    <div class="swiper-slide" id="banner">
+                        <img src="{{ banner.image }}" alt="">
+                    </div>
+                {% endfor %}
+            </div>
+            <!-- Add Pagination -->
+            <div class="swiper-pagination swiper-pagination-white"></div>
+            <!-- Add Arrows -->
+            <div class="swiper-button-next swiper-button-white"></div>
+            <div class="swiper-button-prev swiper-button-white"></div>
+        </div>
+
+
+        <ul class="nav nav-tabs child-nav">
+            {% if islogin %}
+                <li role="presentation" class="active">
+                    <a href="{% url 'app:home' %}">最新推荐</a>
+                </li>
+                <li role="presentation">
+                    <a href="{% url 'app:userlike' %}">收藏</a>
+                </li>
+            {% else %}
+                <li role="presentation" class="active">
+                    <a href="{% url 'app:home' %}">最新推荐</a>
+                </li>
+            {% endif %}
+            {#            <li role="presentation" class="active">#}
+            {#                <a href="#">最新推荐</a>#}
+            {#            </li>#}
+            {#            <!--<li role="presentation">#}
+            {#                <a href="#">收藏</a>#}
+            {#            </li>-->#}
+
+        </ul>
+
+        <ul class="movie_list">
+            {% for movie in movies %}
+
+
+
+                <li>
+                    <div class="movie_list_left">
+                        <a target="_blank" href="#" title="{{ movie.title }}">
+                            <img src="{{ movie.image }}"
+                                 alt="{{ movie.title }}">
+                            {#                    <div class="bottom-cover">#}
+                            {#                        <span class="film-time">02:48</span>#}
+                            {#                    </div>#}
+                        </a>
+                    </div>
+
+                    <div class="movie_list_right">
+                        <h2>
+                            <a target="_blank" href="{{ movie.request_url }}" title="{{ movie.title }}">
+                                <span>{{ movie.title }}</span>
+                            </a>
+                        </h2>
+
+                        <div class="movie-intro">
+                            {{ movie.desc }}
+                        </div>
+                        <div class="movie-like" id="movie_like" postid="{{ movie.postid }}">
+                            <p class="glyphicon glyphicon-star-empty" id="like" postid="{{ movie.postid }}"></p>
+                            <span>{{ movie.like_num }}</span>
+                            {#                    <span>{{ like_num }}</span>#}
+                        </div>
+                    </div>
+                </li>
+            {% empty %}
+                <p>这是一个黑洞</p>
+            {% endfor %}
+        </ul>
+
+
+    </div>
+{% endblock %}
